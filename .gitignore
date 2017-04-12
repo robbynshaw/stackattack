@@ -250,3 +250,11 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Angular additions
+stackattack/Scripts/src/logs/*
+stackattack/Scripts/src/node_modules/
+stackattack/Scripts/src/app/bower_components/
+stackattack/Scripts/src/tmp
+stackattack/Scripts/src/.DS_Store
+stackattack/Scripts/src/.idea
