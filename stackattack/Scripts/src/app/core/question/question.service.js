@@ -4,7 +4,7 @@ angular.
   module('core.question').
   factory('Question', ['$resource',
     function($resource) {
-      return $resource('phones/:phoneId.json', {}, {
+      return $resource('questions/:questionId.json', {}, {
         query: {
           method: 'GET',
           params: {phoneId: 'phones'},

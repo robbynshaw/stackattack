@@ -1,6 +1,4 @@
 'use strict';
 
-// Define the `phoneDetail` module
-angular.module('questionList', [
-  'ngRoute'
-]);
+// Define the `questionList` module
+angular.module('questionList', ['core.user', 'core.question']);

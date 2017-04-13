@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using stackattack.Core;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -10,6 +11,10 @@ namespace stackattack
     {
         protected void Application_Start()
         {
+            Config config = new Config();
+
+            Cache.Load(config);
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

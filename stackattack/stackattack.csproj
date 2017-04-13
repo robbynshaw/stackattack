@@ -109,12 +109,24 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.105.0\lib\net451\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.105.0\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Net.Http" />
@@ -204,6 +216,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Answers\Answer.cs" />
+    <Compile Include="Answers\IAnswer.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -211,11 +225,36 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Core\BaseController.cs" />
+    <Compile Include="Core\Cache.cs" />
+    <Compile Include="Core\Config.cs" />
+    <Compile Include="Core\IConfig.cs" />
+    <Compile Include="Core\RandomizedStore.cs" />
+    <Compile Include="External\APIClient.cs" />
+    <Compile Include="External\StackOverflowAPI.cs" />
+    <Compile Include="External\StackOverflowItemsResponse.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Persistence\AnswerTable.cs" />
+    <Compile Include="Persistence\QuestionTable.cs" />
+    <Compile Include="Persistence\SqLiteInt.cs" />
+    <Compile Include="Persistence\SQLiteTable.cs" />
+    <Compile Include="Persistence\FileBasedStorage.cs" />
+    <Compile Include="Persistence\IDbReadable.cs" />
+    <Compile Include="Persistence\IStorageProvider.cs" />
+    <Compile Include="Persistence\UserTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Questions\IQuestion.cs" />
+    <Compile Include="Questions\IQuestionStore.cs" />
+    <Compile Include="Questions\Question.cs" />
+    <Compile Include="Questions\QuestionStore.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Users\IUser.cs" />
+    <Compile Include="Users\IUserStore.cs" />
+    <Compile Include="Users\User.cs" />
+    <Compile Include="Users\UserStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -228,15 +267,22 @@
     </Content>
     <Content Include="Scripts\src\app\app.config.js" />
     <Content Include="Scripts\src\app\app.module.js" />
+    <Content Include="Scripts\src\app\core\core.module.js" />
     <Content Include="Scripts\src\app\core\question\question.module.js" />
     <Content Include="Scripts\src\app\core\question\question.service.js" />
+    <Content Include="Scripts\src\app\core\user\user.module.js" />
+    <Content Include="Scripts\src\app\core\user\user.service.js" />
+    <Content Include="Scripts\src\app\game-overview\game-overview_test.js" />
     <Content Include="Scripts\src\app\game-overview\game-overview.html" />
-    <Content Include="Scripts\src\app\game\game.js" />
-    <Content Include="Scripts\src\app\game\game_test.js" />
+    <Content Include="Scripts\src\app\game-overview\game-overview.component.js" />
+    <Content Include="Scripts\src\app\game-overview\game-overview.module.js" />
+    <Content Include="Scripts\src\app\question-detail\question-detail.component.js" />
     <Content Include="Scripts\src\app\question-detail\question-detail.html" />
+    <Content Include="Scripts\src\app\question-detail\question-detail.module.js" />
     <Content Include="Scripts\src\app\question-list\question-list.component.js" />
     <Content Include="Scripts\src\app\question-list\question-list.html" />
     <Content Include="Scripts\src\app\question-list\queston-list.module.js" />
+    <Content Include="Scripts\src\app\recent-question-list\recent-question-list.component.js" />
     <Content Include="Scripts\src\app\recent-question-list\recent-question-list.html" />
     <Content Include="Scripts\src\app\recent-question-list\recent-question-list.module.js" />
     <Content Include="Scripts\src\e2e-tests\protractor.conf.js" />
@@ -262,7 +308,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="Scripts\src\app\components\" />
     <Folder Include="Scripts\vendor\" />
   </ItemGroup>
@@ -314,7 +359,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets'))" />
   </Target>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
