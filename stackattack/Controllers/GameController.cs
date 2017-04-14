@@ -1,19 +1,21 @@
 ﻿using stackattack.Core;
 using stackattack.Models;
 using stackattack.Users;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace stackattack.Controllers
 {
-    // This is not currently in use because it uses AngularJS,
-    // and it was taking me too long, so I abandoned it.
-    public class HomeController : BaseController
+    public class GameController : BaseController
     {
-        public HomeController() : base()
+        public GameController() : base()
         {
         }
 
-        public HomeController(IUserStore userStore) : base(userStore)
+        public GameController(IUserStore userStore) : base(userStore)
         {
         }
 

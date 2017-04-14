@@ -34,7 +34,8 @@ namespace stackattack.Controllers
             return this.userStore.Get(id);
         }
 
-        // GET api/<controller>/CheckScore
+        // POST api/<controller>/
+        [HttpGet]
         public IGuessResponse CheckScore(int userID, int answerID)
         {
             IGuessResponse response = this.questionStore.CheckAnswer(answerID);

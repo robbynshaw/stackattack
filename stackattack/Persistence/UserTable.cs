@@ -53,7 +53,6 @@ namespace stackattack.Persistence
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"update {this.TableName} set");
             sb.AppendLine("HighScore = @HighScore");
-            sb.Length = sb.Length - 3;
             sb.AppendLine($"where ID = {item.ID}");
             return sb.ToString();
         }

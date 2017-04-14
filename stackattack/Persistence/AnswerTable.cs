@@ -91,18 +91,17 @@ namespace stackattack.Persistence
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"update {this.TableName} set");
-            sb.AppendLine("DBQuestionID = @DBQuestionID");
-            sb.AppendLine("GuessScore = @GuessScore");
-            sb.AppendLine("Guesses = @Guesses");
-            sb.AppendLine("IsAccepted = @IsAccepted");
-            sb.AppendLine("Score = @Score");
-            sb.AppendLine("LastActivityDate = @LastActivityDate");
-            sb.AppendLine("LastEditDate = @LastEditDate");
-            sb.AppendLine("CreationDate = @CreationDate");
-            sb.AppendLine("AnswerID = @AnswerID");
-            sb.AppendLine("QuestionID = @QuestionID");
+            sb.AppendLine("DBQuestionID = @DBQuestionID,");
+            sb.AppendLine("GuessScore = @GuessScore,");
+            sb.AppendLine("Guesses = @Guesses,");
+            sb.AppendLine("IsAccepted = @IsAccepted,");
+            sb.AppendLine("Score = @Score,");
+            sb.AppendLine("LastActivityDate = @LastActivityDate,");
+            sb.AppendLine("LastEditDate = @LastEditDate,");
+            sb.AppendLine("CreationDate = @CreationDate,");
+            sb.AppendLine("AnswerID = @AnswerID,");
+            sb.AppendLine("QuestionID = @QuestionID,");
             sb.AppendLine("Body = @Body");
-            sb.Length = sb.Length - 3;
             sb.AppendLine($"where ID = {item.ID}");
             return sb.ToString();
         }

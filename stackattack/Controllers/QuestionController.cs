@@ -24,8 +24,14 @@ namespace stackattack.Controllers
             this.questionStore = questionStore;
         }
 
+        // GET api/<controller>/Get/5
+        public IQuestion Get(int id)
+        {
+            return this.questionStore.Get(id);
+        }
+
         // GET api/<controller>/Get?count=#
-        public IEnumerable<IQuestion> GetRecent(int count)
+        public IEnumerable<IQuestionSummary> GetRecent(int count)
         {
             return this.questionStore.GetRecentlyGuessed(count);
         }
@@ -37,7 +43,7 @@ namespace stackattack.Controllers
         }
 
         // GET api/<controller>/GetRandom?count=#
-        public IEnumerable<IQuestion> GetRandom(int count)
+        public IEnumerable<IQuestionSummary> GetRandom(int count)
         {
             return this.questionStore.GetRandom(count);
         }

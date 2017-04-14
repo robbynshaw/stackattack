@@ -131,10 +131,10 @@ namespace stackattack.Questions
                         this.Link = rdr.GetString(i);
                         break;
                     case "Title":
-                        this.Link = rdr.GetString(i);
+                        this.Title = rdr.GetString(i);
                         break;
                     case "Body":
-                        this.Link = rdr.GetString(i);
+                        this.Body = rdr.GetString(i);
                         break;
                 }
             }

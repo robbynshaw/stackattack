@@ -69,8 +69,11 @@ namespace stackattack.Core
 
             lock (collectionLock)
             {
-                int i = randomizer.Next(this.count);
-                randomItems.Add(this.items[i]);
+                while (randomItems.Count < count)
+                {
+                    int i = randomizer.Next(this.count);
+                    randomItems.Add(this.items[i]);
+                }
             }
 
             return randomItems;

@@ -196,5 +196,10 @@ namespace stackattack.Questions
             }
             return new GuessResponse(success, score);
         }
+
+        public IQuestion Get(int id)
+        {
+            return this.allQuestions.FirstOrDefault(q => q.ID == id);
+        }
     }
 }

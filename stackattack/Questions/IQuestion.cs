@@ -7,18 +7,12 @@ using System.Threading.Tasks;
 
 namespace stackattack.Questions
 {
-    public interface IQuestion
+    public interface IQuestion : IQuestionSummary
     {
-        long ID { get; }
-
-        DateTime LastGuess { get; }
-        long Guesses { get; }
-
         long ViewCount { get; }
         DateTime LastActivityDate { get; }
         DateTime CreationDate { get; }
         DateTime LastEditDate { get; }
-        string Title { get; }
         string Body { get; }
 
         List<Answer> Answers { get; }

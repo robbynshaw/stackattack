@@ -11,5 +11,6 @@ namespace stackattack.Questions
         IEnumerable<IQuestion> GetRandom(int count);
         IEnumerable<IQuestion> GetRecentlyGuessed(int count);
         IGuessResponse CheckAnswer(int questionID);
+        IQuestion Get(int id);
     }
 }

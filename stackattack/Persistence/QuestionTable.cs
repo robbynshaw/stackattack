@@ -99,20 +99,19 @@ namespace stackattack.Persistence
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"update {this.TableName} set");
-            sb.AppendLine("LastGuess = @LastGuess");
-            sb.AppendLine("Guesses = @Guesses");
-            sb.AppendLine("IsAnswered = @IsAnswered");
-            sb.AppendLine("ViewCount = @ViewCount");
-            sb.AppendLine("AcceptedAnswerID = @AcceptedAnswerID");
-            sb.AppendLine("Score = @Score");
-            sb.AppendLine("LastActivityDate = @LastActivityDate");
-            sb.AppendLine("CreationDate = @CreationDate");
-            sb.AppendLine("LastEditDate = @LastEditDate");
-            sb.AppendLine("QuestionID = @QuestionID");
-            sb.AppendLine("Link = @Link");
-            sb.AppendLine("Title = @Title");
+            sb.AppendLine("LastGuess = @LastGuess,");
+            sb.AppendLine("Guesses = @Guesses,");
+            sb.AppendLine("IsAnswered = @IsAnswered,");
+            sb.AppendLine("ViewCount = @ViewCount,");
+            sb.AppendLine("AcceptedAnswerID = @AcceptedAnswerID,");
+            sb.AppendLine("Score = @Score,");
+            sb.AppendLine("LastActivityDate = @LastActivityDate,");
+            sb.AppendLine("CreationDate = @CreationDate,");
+            sb.AppendLine("LastEditDate = @LastEditDate,");
+            sb.AppendLine("QuestionID = @QuestionID,");
+            sb.AppendLine("Link = @Link,");
+            sb.AppendLine("Title = @Title,");
             sb.AppendLine("Body = @Body");
-            sb.Length = sb.Length - 3;
             sb.AppendLine($"where ID = {item.ID}");
             return sb.ToString();
         }

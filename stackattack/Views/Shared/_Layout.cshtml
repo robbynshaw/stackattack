@@ -14,20 +14,18 @@
     <!-- Setup simple configuration object for frontend -->
     <script type="text/javascript">
         document.config = {
-            userid: @Model.ID,
+            baseUrl: '/',
+            greeting: 'Hello, world',
+            userId: @Model.ID,
         };
     </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top header">
-        <div class="container">
-            <div class="navbar-header">
-                <h1>stack<strong>attack</strong></h1>
-            </div>
-        </div>
+        <h1>stack<strong>attack</strong></h1>
     </div>
 
-    <div class="container-fluid">
+    <div class="container content">
         @RenderBody()
     </div>
 </body>
