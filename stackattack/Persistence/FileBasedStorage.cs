@@ -4,18 +4,33 @@ using System.Linq;
 using System.Web;
 using stackattack.Users;
 using System.Data.SQLite;
+using stackattack.Questions;
+using stackattack.Answers;
 
 namespace stackattack.Persistence
 {
-    internal class FileBasedStorage : IStorageProvider
+    public class FileBasedStorage
     {
-        private const string dbname = "stackattack.sqlite";
+        private string dbName;
 
-        private UserTable UserTable;
+        private UserTable userTable;
+        private QuestionTable questionTable;
+        private AnswerTable answerTable;
+
+        public FileBasedStorage(string dbName)
+        {
+            this.dbName = dbName;
+
+            this.userTable = new UserTable();
+            this.questionTable = new QuestionTable();
+            this.answerTable = new AnswerTable();
+
+            this.Load();
+        }
 
         private void CreateDatabase()
         {
-            SQLiteConnection.CreateFile(dbname);
+            SQLiteConnection.CreateFile(this.dbName);
         }
 
         private SQLiteConnection GetConnection()
@@ -24,13 +39,13 @@ namespace stackattack.Persistence
 
             try
             {
-                con = new SQLiteConnection($"Data Source={dbname};Version=3;");
+                con = new SQLiteConnection($"Data Source={this.dbName};Version=3;");
                 con.Open();
             }
             catch
             {
                 CreateDatabase();
-                con = new SQLiteConnection($"Data Source={dbname};Version=3;");
+                con = new SQLiteConnection($"Data Source={this.dbName};Version=3;");
                 con.Open();
             }
 
@@ -39,15 +54,24 @@ namespace stackattack.Persistence
 
         private bool TablesExist(SQLiteConnection con)
         {
-            return this.UserTable.Exists(con);
+            try
+            {
+                return this.userTable.Exists(con);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void CreateTables(SQLiteConnection con)
         {
-            this.UserTable.Create(con);
+            this.userTable.Create(con);
+            this.questionTable.Create(con);
+            this.answerTable.Create(con);
         }
 
-        public void Load()
+        private void Load()
         {
             using (SQLiteConnection con = GetConnection())
             {
@@ -58,15 +82,37 @@ namespace stackattack.Persistence
             }
         }
 
-        public IUser GetUser()
+        public SQLiteConnection GetUserTable(out IDataStore<User> table)
         {
-            throw new NotImplementedException();
+            table = this.userTable;
+            return GetConnection();
         }
 
-        public void SaveUser()
+        public SQLiteConnection GetQuestionTable(out IDataStore<Question> table)
         {
-            throw new NotImplementedException();
+            table = this.questionTable;
+            return GetConnection();
         }
 
+        public SQLiteConnection GetAnswerTable(out IDataStore<Answer> table)
+        {
+            table = this.answerTable;
+            return GetConnection();
+        }
+
+        public IDataStore<User> GetUserTable()
+        {
+            return this.userTable;
+        }
+
+        public IDataStore<Question> GetQuestionTable()
+        {
+            return this.questionTable;
+        }
+
+        public IDataStore<Answer> GetAnswerTable()
+        {
+            return this.answerTable;
+        }
     }
 }

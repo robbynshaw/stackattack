@@ -258,3 +258,6 @@ stackattack/Scripts/src/app/bower_components/
 stackattack/Scripts/src/tmp
 stackattack/Scripts/src/.DS_Store
 stackattack/Scripts/src/.idea
+
+# SQLite
+*.sqlite

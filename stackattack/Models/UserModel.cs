@@ -6,7 +6,7 @@ namespace stackattack.Models
     {
         private IUser user;
 
-        public int ID { get { return this.user == null ? int.MinValue : this.user.ID; } }
+        public long ID { get { return this.user == null ? int.MinValue : this.user.ID; } }
 
         public UserModel(IUser user)
         {

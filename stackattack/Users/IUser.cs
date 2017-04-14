@@ -8,6 +8,6 @@ namespace stackattack.Users
 {
     public interface IUser
     {
-        int ID { get; }
+        long ID { get; }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using stackattack.Answers;
 using stackattack.Core;
 using stackattack.External;
+using stackattack.Persistence;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Web;
 
@@ -14,6 +16,10 @@ namespace stackattack.Questions
     /// </summary>
     public class QuestionStore : IQuestionStore
     {
+        private int fetchSize = 5;
+        private int anwerCount = 5;
+
+        private FileBasedStorage storage;
         private RandomizedStore<IQuestion> randomQuestions = new RandomizedStore<IQuestion>();
         private StackOverflowAPI soApi = new StackOverflowAPI();
 
@@ -21,23 +27,117 @@ namespace stackattack.Questions
 
         public int MaxQuestions { get; private set; }
 
-        public QuestionStore(int maxQuestions)
+        public QuestionStore(FileBasedStorage storage, int maxQuestions)
         {
+            this.storage = storage;
             this.MaxQuestions = maxQuestions;
 
             // Initial load
-            LoadMore();
+            LoadFromDB();
+            LoadFromAPI();
         }
 
-        private void LoadMore()
+        private void Insert(IEnumerable<Question> items)
         {
-            if (allQuestions.Count() < this.MaxQuestions)
+            if (items != null)
             {
-                IEnumerable<Question> questions = this.soApi
-                    .GetQuestionsWithAcceptedAnswers(5, 5);
+                this.randomQuestions.Insert(items);
+                this.allQuestions.AddRange(items);
+            }
+        }
 
-                randomQuestions.Insert(questions);
-                allQuestions.AddRange(questions);
+        private void Insert(Question item)
+        {
+            if (item != null)
+            {
+                this.randomQuestions.Insert(item);
+                this.allQuestions.Add(item);
+            }
+        }
+
+        private void LoadFromDB()
+        {
+            IDataStore<Question> questionTable;
+            IDataStore<Answer> answerTable;
+            IEnumerable<Question> questions = null;
+            IEnumerable<Answer> answers = null;
+            SQLiteConnection con = null;
+
+            using (con = this.storage.GetQuestionTable(out questionTable))
+            {
+                if (questionTable != null)
+                {
+                    questions = questionTable.GetAll(con);
+                }
+            }
+
+            using (con = this.storage.GetAnswerTable(out answerTable))
+            {
+                if (answerTable != null)
+                {
+                    answers = answerTable.GetAll(con);
+                }
+            }
+
+            if (questions != null && answers != null)
+            {
+                Question.MergeQuestionsAndAnswers(ref questions, answers);
+                Insert(questions);
+            }
+        }
+
+        private void LoadFromAPI()
+        {
+            int page = 0;
+
+            while (this.allQuestions.Count < this.MaxQuestions)
+            {
+                // Don't fetch too much
+                int toFetch = this.MaxQuestions - this.allQuestions.Count;
+                toFetch = toFetch > this.fetchSize ? this.fetchSize : toFetch;
+
+                IEnumerable<Question> questions = this.soApi
+                    .GetQuestionsWithAcceptedAnswers(toFetch, this.anwerCount, ++page);
+
+                if (questions != null)
+                {
+                    // Will also insert
+                    Save(questions);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Expects fresh questions with answers from the api
+        /// </summary>
+        /// <param name="questions"></param>
+        private void Save(IEnumerable<Question> questions)
+        {
+            IDataStore<Question> questionTable;
+            IDataStore<Answer> answerTable;
+
+            using (SQLiteConnection con = this.storage.GetQuestionTable(out questionTable))
+            {
+                answerTable = this.storage.GetAnswerTable();
+
+                foreach (Question q in questions)
+                {
+                    // Will fail if no accepted answer
+                    if (q.CalculateAnswerScores())
+                    {
+                        if (!this.allQuestions.Any(aq => aq.QuestionID == q.QuestionID))
+                        {
+                            questionTable.Save(con, q);
+
+                            foreach (Answer a in q.Answers)
+                            {
+                                a.DBQuestionID = q.ID;
+                                answerTable.Save(con, a);
+                            }
+                        }
+                        Insert(q);
+                    }
+                }
             }
         }
 
@@ -49,6 +149,13 @@ namespace stackattack.Questions
         public IEnumerable<IQuestion> GetRandom(int count)
         {
             return this.randomQuestions.Get(count);
+        }
+
+        public IEnumerable<IQuestion> GetRecentlyGuessed(int count)
+        {
+            return this.allQuestions
+                .OrderByDescending(q => q.LastGuess)
+                .Take(count);
         }
     }
 }

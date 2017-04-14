@@ -26,7 +26,7 @@ namespace stackattack.Core
             this.userStore = userStore;
         }
 
-        private HttpCookie CreateUserCookie(int id)
+        private HttpCookie CreateUserCookie(long id)
         {
             HttpCookie userCookie = new HttpCookie(this.userStore.CookieName, id.ToString());
             userCookie.Expires = DateTime.Now + this.TicketExpiration;
@@ -38,7 +38,7 @@ namespace stackattack.Core
             return this.Request.Cookies[this.userStore.CookieName]?.Value;
         }
 
-        private void SetUserCookie(int id)
+        private void SetUserCookie(long id)
         {
             this.Request.Cookies.Set(CreateUserCookie(id));
         }

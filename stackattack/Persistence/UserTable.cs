@@ -1,6 +1,7 @@
 ﻿using stackattack.Users;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -14,33 +15,45 @@ namespace stackattack.Persistence
 
         protected override string TableName { get { return "users"; } }
 
+        private void AddCommandParams(SQLiteCommand com, User item)
+        {
+            com.Parameters.AddWithValue("@HighScore", item.HighScore);
+        }
+
         protected override string GetCreateSql()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"create table {this.TableName} (");
             sb.AppendLine("ID integer not null primary key,");
-            sb.AppendLine("HighScore integer");
+            sb.AppendLine("HighScore integer,");
+            sb.Length = sb.Length - 3;
             sb.AppendLine(")");
             return sb.ToString();
         }
 
-        protected override string GetInsertSql(User item)
+        protected override string GetInsertSql(SQLiteCommand com, User item)
         {
+            AddCommandParams(com, item);
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"insert into {this.TableName} (");
-            sb.AppendLine("HighScore");
+            sb.AppendLine("HighScore,");
+            sb.Length = sb.Length - 3;
             sb.AppendLine(") values (");
-            sb.AppendLine(item.HighScore);
-            sb.AppendLine(");");
-            sb.AppendLine("sqlite3_last_insert_rowid()");
+            sb.AppendLine("@HighScore,");
+            sb.Length = sb.Length - 3;
+            sb.AppendLine(")");
             return sb.ToString();
         }
 
-        protected override string GetUpdateSql(User item)
+        protected override string GetUpdateSql(SQLiteCommand com, User item)
         {
+            AddCommandParams(com, item);
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"update {this.TableName} set");
-            sb.AppendLine($"HighScore = {item.HighScore}");
+            sb.AppendLine("HighScore = @HighScore");
+            sb.Length = sb.Length - 3;
             sb.AppendLine($"where ID = {item.ID}");
             return sb.ToString();
         }

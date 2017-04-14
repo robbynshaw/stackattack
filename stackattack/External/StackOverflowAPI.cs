@@ -24,13 +24,13 @@ namespace stackattack.External
             }
         }
 
-        public IEnumerable<Question> GetQuestions(int count, int answerCount)
+        public IEnumerable<Question> GetQuestions(int count, int answerCount, int page)
         {
             IRestClient client = GetClient();
             IRestRequest request = new RestRequest("2.2/search/advanced", Method.GET);
 
             request.AddParameter("site", "stackoverflow");
-            request.AddParameter("page", 1);
+            request.AddParameter("page", page);
             request.AddParameter("pagesize", count);
             request.AddParameter("order", "desc");
             request.AddParameter("sort", "activity");
@@ -64,11 +64,11 @@ namespace stackattack.External
             return response?.Data.Items;
         }
 
-        public IEnumerable<Question> GetQuestionsWithAcceptedAnswers(int count, int answerCount)
+        public IEnumerable<Question> GetQuestionsWithAcceptedAnswers(int count, int answerCount, int page)
         {
             IEnumerable<Question> questions = null;
 
-            questions = GetQuestions(count, answerCount);
+            questions = GetQuestions(count, answerCount, page);
             if (questions == null)
             {
                 throw new Exception("Could not retrieve questions from StackOverflow");
@@ -77,9 +77,6 @@ namespace stackattack.External
             // Create IEnumerable for query
             IEnumerable<long> questionIDs = questions.Select(q => q.QuestionID);
 
-            // Create dict for sorting later
-            IDictionary<long, Question> questionDict = questions.ToDictionary(q => q.QuestionID);
-
             // Get the answers to those questions
             IEnumerable<Answer> answers = GetAnswersToQuestions(questionIDs);
             if (answers == null)
@@ -87,15 +84,7 @@ namespace stackattack.External
                 throw new Exception("Could not retrieve answers from StackOverflow");
             }
 
-            // Add them to the questions. They do not come in order.
-            foreach (Answer answer in answers)
-            {
-                Question q;
-                if (questionDict.TryGetValue(answer.QuestionID, out q))
-                {
-                    q.Answers.Add(answer);
-                }
-            }
+            Question.MergeQuestionsAndAnswers(ref questions, answers);
 
             return questions;
         }

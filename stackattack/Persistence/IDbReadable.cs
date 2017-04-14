@@ -4,7 +4,7 @@ namespace stackattack.Persistence
 {
     interface IDbReadable
     {
-        int ID { get; set; }
+        long ID { get; set; }
         void Read(DbDataReader rdr);
     }
 }

@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace stackattack.Persistence
 {
-    internal abstract class SQLiteTable<TItem> where TItem : IDbReadable, new()
+    internal abstract class SQLiteTable<TItem> : IDataStore<TItem> where TItem : IDbReadable, new()
     {
         protected abstract string TableName { get; }
 
         protected abstract string GetCreateSql();
-        protected abstract string GetInsertSql(TItem item);
-        protected abstract string GetUpdateSql(TItem item);
+        protected abstract string GetInsertSql(SQLiteCommand c, TItem item);
+        protected abstract string GetUpdateSql(SQLiteCommand c, TItem item);
 
         protected void ExecuteNonQuery(SQLiteConnection con, string sql)
         {
@@ -35,6 +36,7 @@ namespace stackattack.Persistence
                     {
                         T item = new T();
                         item.Read(rdr);
+                        items.Add(item);
                     }
                 }
             }
@@ -48,30 +50,49 @@ namespace stackattack.Persistence
             ExecuteNonQuery(con, sql);
         }
 
-        public virtual TItem Save(SQLiteConnection con, TItem item)
+        public virtual TItem Save(DbConnection dbcon, TItem item)
         {
-            if (item.ID == int.MinValue)
+            SQLiteConnection con = dbcon as SQLiteConnection;
+            SQLiteCommand cmd = new SQLiteCommand(con);
+
+            if (item.ID == 0)
             {
-                string sql = GetInsertSql(item);
-                SqLiteInt id = ExecuteReader<SqLiteInt>(con, sql).FirstOrDefault();
-                item.ID = id.Value;
+                string sql = GetInsertSql(cmd, item);
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
+                item.ID = con.LastInsertRowId;
             }
             else
             {
-                string sql = GetUpdateSql(item);
-                ExecuteNonQuery(con, sql);
+                string sql = GetUpdateSql(cmd, item);
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
             }
 
             return item;
         }
 
-        public virtual TItem Get(SQLiteConnection con, int id)
+        public virtual TItem Get(DbConnection dbcon, int id)
         {
+            SQLiteConnection con = dbcon as SQLiteConnection;
+
             string sql = string.Format(
-@"select from {0}
+@"select *
+from {0}
 where ID = {1}", this.TableName, id);
 
             return ExecuteReader<TItem>(con, sql).FirstOrDefault();
+        }
+
+        public IEnumerable<TItem> GetAll(DbConnection dbcon)
+        {
+            SQLiteConnection con = dbcon as SQLiteConnection;
+
+            string sql = string.Format(
+@"select *
+from {0}", this.TableName);
+
+            return ExecuteReader<TItem>(con, sql);
         }
     }
 }

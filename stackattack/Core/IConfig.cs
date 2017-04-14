@@ -9,5 +9,6 @@ namespace stackattack.Core
     public interface IConfig
     {
         int MaxQuestions { get; }
+        string SQLiteDatabasePath { get; }
     }
 }

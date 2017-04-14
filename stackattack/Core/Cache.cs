@@ -1,4 +1,5 @@
-﻿using stackattack.Questions;
+﻿using stackattack.Persistence;
+using stackattack.Questions;
 using stackattack.Users;
 
 namespace stackattack.Core
@@ -19,8 +20,10 @@ namespace stackattack.Core
         {
             if (!loaded)
             {
+                FileBasedStorage storage = new FileBasedStorage(config.SQLiteDatabasePath);
+
                 UserStore = new UserStore();
-                QuestionStore = new QuestionStore(config.MaxQuestions);
+                QuestionStore = new QuestionStore(storage, config.MaxQuestions);
 
                 loaded = true;
             }
