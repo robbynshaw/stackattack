@@ -7,6 +7,9 @@ namespace stackattack.Questions
 {
     public interface IQuestionStore
     {
-
+        IQuestion GetRandom();
+        IEnumerable<IQuestion> GetRandom(int count);
+        IEnumerable<IQuestion> GetRecentlyGuessed(int count);
+        IGuessResponse CheckAnswer(int questionID);
     }
 }

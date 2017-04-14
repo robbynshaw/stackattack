@@ -225,6 +225,8 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Core\BaseController.cs" />
     <Compile Include="Core\Cache.cs" />
     <Compile Include="Core\Config.cs" />
@@ -251,6 +253,7 @@
     <Compile Include="Questions\Question.cs" />
     <Compile Include="Questions\QuestionStore.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Questions\IGuessResponse.cs" />
     <Compile Include="Users\IUser.cs" />
     <Compile Include="Users\IUserStore.cs" />
     <Compile Include="Users\User.cs" />

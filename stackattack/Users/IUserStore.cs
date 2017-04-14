@@ -11,5 +11,7 @@ namespace stackattack.Users
         IUser Get(int id);
         IUser Create();
         string CookieName { get; }
+
+        void AddScore(int userID, int score);
     }
 }

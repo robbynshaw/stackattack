@@ -12,7 +12,7 @@ namespace stackattack.Core
     {
         private static bool loaded = false;
 
-        public static IConfig Config { get; set; }
+        public static IConfig Config { get; private set; }
         public static IUserStore UserStore { get; private set; }
         public static IQuestionStore QuestionStore { get; private set; }
 
@@ -22,7 +22,7 @@ namespace stackattack.Core
             {
                 FileBasedStorage storage = new FileBasedStorage(config.SQLiteDatabasePath);
 
-                UserStore = new UserStore();
+                UserStore = new UserStore(storage);
                 QuestionStore = new QuestionStore(storage, config.MaxQuestions);
 
                 loaded = true;

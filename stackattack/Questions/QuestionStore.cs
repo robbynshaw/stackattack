@@ -24,6 +24,7 @@ namespace stackattack.Questions
         private StackOverflowAPI soApi = new StackOverflowAPI();
 
         private List<Question> allQuestions = new List<Question>();
+        private List<Answer> allAnswers = new List<Answer>();
 
         public int MaxQuestions { get; private set; }
 
@@ -41,8 +42,10 @@ namespace stackattack.Questions
         {
             if (items != null)
             {
+                // TODO should be dicts for performance
                 this.randomQuestions.Insert(items);
                 this.allQuestions.AddRange(items);
+                this.allAnswers.AddRange(items.SelectMany(q => q.Answers));
             }
         }
 
@@ -52,6 +55,7 @@ namespace stackattack.Questions
             {
                 this.randomQuestions.Insert(item);
                 this.allQuestions.Add(item);
+                this.allAnswers.AddRange(item.Answers);
             }
         }
 
@@ -141,6 +145,23 @@ namespace stackattack.Questions
             }
         }
 
+        private void RegisterGuess(Question question, Answer answer)
+        {
+            IDataStore<Question> questionTable;
+
+            question.Guesses++;
+            question.LastGuess = DateTime.Now;
+
+            answer.Guesses++;
+
+            using (SQLiteConnection con = this.storage.GetQuestionTable(out questionTable))
+            {
+                questionTable.Save(con, question);
+
+                this.storage.GetAnswerTable().Save(con, answer);
+            }
+        }
+
         public IQuestion GetRandom()
         {
             return this.randomQuestions.Get();
@@ -156,6 +177,24 @@ namespace stackattack.Questions
             return this.allQuestions
                 .OrderByDescending(q => q.LastGuess)
                 .Take(count);
+        }
+
+        public IGuessResponse CheckAnswer(int answerID)
+        {
+            int score = 0;
+            bool success = false;
+
+            Answer answer = this.allAnswers.FirstOrDefault(a => a.ID == answerID);
+            Question question = this.allQuestions.FirstOrDefault(q => q.ID == answer.DBQuestionID);
+
+            if (question != null && answer != null)
+            {
+                RegisterGuess(question, answer);
+
+                score = answer.GuessScore;
+                success = answer.IsAccepted;
+            }
+            return new GuessResponse(success, score);
         }
     }
 }
