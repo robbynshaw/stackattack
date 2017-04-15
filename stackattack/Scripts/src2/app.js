@@ -18,7 +18,7 @@ $(document).ready(function () {
     var recentQuestions = new QuestionList({
         baseUrl: config.baseUrl,
         userId: config.userId,
-        title: 'Recent Questions',
+        title: 'Recently Guessed',
         onlyRecent: true,
         amountToFetch: 10,
         amountToShow: 10,

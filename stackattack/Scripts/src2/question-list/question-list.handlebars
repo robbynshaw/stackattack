@@ -1,6 +1,8 @@
 ﻿<h2>{{title}}</h2>
 <ul>
 {{#each questions}}
-    <li question-id="{{this.id}}">{{this.title}}</li>
+    <li question-id="{{this.id}}">
+        <span class="question-list-item">{{this.title}}</span>
+        <span class="question-list-item-guesses">{{this.guesses}}</span></li>
 {{/each}}
 </ul>

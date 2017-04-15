@@ -1,5 +1,10 @@
 ﻿/* site css stylesheet */
 
+h1, h2, h3, h4, h5 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+}
+
 .header {
     width: 100%;
     background-color: #91b5c4;
@@ -8,9 +13,7 @@
 }
 
 .header h1 {
-    font-family: 'Roboto', sans-serif;
     font-size: 2em;
-    font-weight: 100;
     padding: 10px;
     margin: 0px;
 }
@@ -21,8 +24,73 @@
     padding: 30px;
 }
 
+.question-detail-item {
+    border-left: 3px solid #91b5c4;
+    margin-top: 50px;
+    padding: 0 10px 5px 10px;
+}
+
+.question-detail-item h2 {
+    font-size: 1.6em;
+    color: #91b5c4;
+    font-weight: 500;
+}
+
 .answer-detail-item {
-    padding: 10px;
-    margin: 10px;
-    border: 1px dotted #3ca29c;
+    border-left: 3px solid #a7cdbe;
+    margin-top: 30px;
+    padding: 0 10px 5px 10px;
+}
+
+.answer-detail-item:hover {
+    cursor: pointer;
+    background-color: #f6fcfd;
+}
+
+.answer-detail-item h2 {
+    font-size: 1.6em;
+    color: #a7cdbe;
+    font-weight: 500;
+}
+
+.question-list h2 {
+    text-align: center;
+    font-size: 1.6em;
+    font-weight: 100;
+}
+
+.question-list ul {
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+    color: #fff;
+}
+
+.question-list ul li {
+    background-color: #a7cdbe;
+    margin: 5px;
+    padding: 7px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px; /* future proofing */
+    -khtml-border-radius: 3px; /* for old Konqueror browsers */
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.question-list ul li:hover {
+    background-color: #8caa9e;
+}
+
+.question-list-item {
+    padding-right: 20px;
+}
+
+.question-list-item-guesses {
+    color: #7a96a2;
+    display: inline-block;
+    clear: none;
+    float: right;
+    width: 18px;
+    text-align: center;
 }

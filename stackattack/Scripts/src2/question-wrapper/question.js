@@ -53,6 +53,8 @@ function Question(opts) {
         if (args.answers) {
             for (var i = 0; i < args.answers.length; i++) {
                 var answer = args.answers[i];
+                // Add number for display
+                answer.number = i + 1;
                 
                 // Add event
                 answer.onClick = new simpleevent(answer);
@@ -65,8 +67,7 @@ function Question(opts) {
 
                 // Fill it up
                 var html = answerDetailTemplate(answer);
-                var $el = $(document.createElement('div'))
-                    .addClass('answer-detail-item');
+                var $el = $(document.createElement('div'));
 
                 $container.append($el);
                 $el.on('click', function () {
