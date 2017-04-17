@@ -11,7 +11,7 @@ namespace stackattack.Users
     public class User : IUser, IDbReadable
     {
         public long ID { get; set; }
-        public long HighScore { get; internal set; }
+        public int TotalScore { get; internal set; }
 
         public User()
         {
@@ -33,8 +33,8 @@ namespace stackattack.Users
                     case "ID":
                         this.ID = rdr.GetInt64(i);
                         break;
-                    case "HighScore":
-                        this.HighScore = rdr.GetInt64(i);
+                    case "TotalScore":
+                        this.TotalScore = rdr.GetInt32(i);
                         break;
                 }
             }

@@ -40,13 +40,15 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var $ = __webpack_require__(1);
+	var ScoreBox = __webpack_require__(326);
 	var QuestionList = __webpack_require__(2);
 	var Question = __webpack_require__(25);
 	
@@ -57,10 +59,21 @@
 	
 	    var $app = $('.app');
 	
+	    var scoreBox = new ScoreBox({
+	        baseUrl: config.baseUrl,
+	        originalScore: config.originalScore,
+	        $container: $app.find('.score-box')
+	    });
+	
 	    var question = new Question({
 	        baseUrl: config.baseUrl,
 	        userId: config.userId,
 	        $container: $app.find('.question-wrapper')
+	    });
+	
+	    // Hook up score box
+	    question.onScoreChanged.subscribe(function (obj, data) {
+	        scoreBox.onScoreAdded.notify(data);
 	    });
 	
 	    var recentQuestions = new QuestionList({
@@ -71,7 +84,9 @@
 	        amountToFetch: 10,
 	        amountToShow: 10,
 	        $container: $app.find('.recent-questions')
-	    }).refresh().onQuestionClick.subscribe(function (obj, id) {
+	    }).refresh();
+	
+	    recentQuestions.onQuestionClick.subscribe(function (obj, id) {
 	        question.refresh(id);
 	    });
 	
@@ -83,13 +98,21 @@
 	        amountToFetch: 10,
 	        amountToShow: 10,
 	        $container: $app.find('.random-questions')
-	    }).refresh().onQuestionClick.subscribe(function (obj, id) {
+	    }).refresh();
+	
+	    randomQuestions.onQuestionClick.subscribe(function (obj, id) {
 	        question.refresh(id);
+	    });
+	
+	    question.onAnswerReceived.subscribe(function () {
+	        recentQuestions.refresh();
+	        randomQuestions.refresh();
 	    });
 	});
 
 /***/ }),
-/* 1 */
+
+/***/ 1:
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10348,7 +10371,8 @@
 
 
 /***/ }),
-/* 2 */
+
+/***/ 2:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10427,7 +10451,8 @@
 	module.exports = QuestionList;
 
 /***/ }),
-/* 3 */
+
+/***/ 3:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10480,7 +10505,8 @@
 	}();
 
 /***/ }),
-/* 4 */
+
+/***/ 4:
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -10551,7 +10577,8 @@
 	}();
 
 /***/ }),
-/* 5 */
+
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
@@ -10577,7 +10604,8 @@
 	},"useData":true});
 
 /***/ }),
-/* 6 */
+
+/***/ 6:
 /***/ (function(module, exports, __webpack_require__) {
 
 	// Create a simple path alias to allow browserify to resolve
@@ -10586,7 +10614,8 @@
 
 
 /***/ }),
-/* 7 */
+
+/***/ 7:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10658,7 +10687,8 @@
 
 
 /***/ }),
-/* 8 */
+
+/***/ 8:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10768,7 +10798,8 @@
 
 
 /***/ }),
-/* 9 */
+
+/***/ 9:
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -10898,7 +10929,8 @@
 
 
 /***/ }),
-/* 10 */
+
+/***/ 10:
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -10955,7 +10987,8 @@
 
 
 /***/ }),
-/* 11 */
+
+/***/ 11:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11007,7 +11040,8 @@
 
 
 /***/ }),
-/* 12 */
+
+/***/ 12:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11052,7 +11086,8 @@
 
 
 /***/ }),
-/* 13 */
+
+/***/ 13:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11152,7 +11187,8 @@
 
 
 /***/ }),
-/* 14 */
+
+/***/ 14:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11183,7 +11219,8 @@
 
 
 /***/ }),
-/* 15 */
+
+/***/ 15:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11218,7 +11255,8 @@
 
 
 /***/ }),
-/* 16 */
+
+/***/ 16:
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11250,7 +11288,8 @@
 
 
 /***/ }),
-/* 17 */
+
+/***/ 17:
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11268,7 +11307,8 @@
 
 
 /***/ }),
-/* 18 */
+
+/***/ 18:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11307,7 +11347,8 @@
 
 
 /***/ }),
-/* 19 */
+
+/***/ 19:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11329,7 +11370,8 @@
 
 
 /***/ }),
-/* 20 */
+
+/***/ 20:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11364,7 +11406,8 @@
 
 
 /***/ }),
-/* 21 */
+
+/***/ 21:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11417,7 +11460,8 @@
 
 
 /***/ }),
-/* 22 */
+
+/***/ 22:
 /***/ (function(module, exports) {
 
 	// Build out our basic SafeString type
@@ -11438,7 +11482,8 @@
 
 
 /***/ }),
-/* 23 */
+
+/***/ 23:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11741,7 +11786,8 @@
 
 
 /***/ }),
-/* 24 */
+
+/***/ 24:
 /***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* global window */
@@ -11768,7 +11814,8 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 25 */
+
+/***/ 25:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11794,13 +11841,28 @@
 	    this.onRefreshed = new simpleevent(this);
 	    this.onAnswerClick = new simpleevent(this);
 	    this.onAnswerReceived = new simpleevent(this);
+	    this.onScoreChanged = new simpleevent(this);
+	
+	    function markUpAnswers(id, answers) {
+	        for (var i = 0; i < answers.length; i++) {
+	            var answer = answers[i];
+	            if (answer.id === id) {
+	                answer.isUserGuess = true;
+	            }
+	            answer.snippet = answer.body.substring(0, 30);
+	        }
+	    }
 	
 	    this.onAnswerReceived.subscribe(function (obj, args) {
+	        obj.onScoreChanged.notify(args.data.score);
+	
+	        markUpAnswers(args.id, args.question.answers);
 	        var wrapperHtml = questionWrapperTemplate();
 	        console.log(args);
 	        var msg = successMessageTemplate(args);
 	        obj.$container.hide();
 	        obj.$container.html(wrapperHtml);
+	        window.scrollTo(0, 0);
 	        obj.$container.find('.question-detail').html(msg);
 	
 	        obj.$container.fadeIn(500);
@@ -11808,10 +11870,10 @@
 	
 	    this.onAnswerClick.subscribe(function (obj, args) {
 	        console.log(args);
-	        checkScore(obj, args.answer.id);
+	        checkScore(obj, args.answer.id, args.question);
 	    });
 	
-	    function checkScore($this, id) {
+	    function checkScore($this, id, question) {
 	        $.ajax({
 	            method: 'GET',
 	            url: $this.baseUrl + 'api/User/CheckScore',
@@ -11820,7 +11882,11 @@
 	                answerID: id
 	            }
 	        }).done(function (data) {
-	            $this.onAnswerReceived.notify(data);
+	            $this.onAnswerReceived.notify({
+	                data: data,
+	                id: id,
+	                question: question
+	            });
 	        });
 	    }
 	
@@ -11833,10 +11899,12 @@
 	
 	                // Add event
 	                answer.onClick = new simpleevent(answer);
-	                answer.onClick.subscribe(function (o, e) {
+	                answer.onClick.subscribe(function (o, data) {
+	                    console.log('answer clicked');
+	                    console.log(o);
 	                    obj.onAnswerClick.notify({
-	                        answer: o,
-	                        element: e
+	                        question: args,
+	                        answer: data
 	                    });
 	                });
 	
@@ -11845,8 +11913,9 @@
 	                var $el = $(document.createElement('div'));
 	
 	                $container.append($el);
+	                $el.data('answer', answer);
 	                $el.on('click', function () {
-	                    answer.onClick.notify($el);
+	                    answer.onClick.notify($(this).data('answer'));
 	                });
 	
 	                // Make it all slide down fancy
@@ -11893,7 +11962,8 @@
 	module.exports = Question;
 
 /***/ }),
-/* 26 */
+
+/***/ 26:
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
@@ -11903,7 +11973,8 @@
 	},"useData":true});
 
 /***/ }),
-/* 27 */
+
+/***/ 27:
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
@@ -11919,7 +11990,8 @@
 	},"useData":true});
 
 /***/ }),
-/* 28 */
+
+/***/ 28:
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
@@ -11935,29 +12007,109 @@
 	},"useData":true});
 
 /***/ }),
-/* 29 */
+
+/***/ 29:
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
 	function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return "<h3>You got the answer correct!</h3>\r\n<p>\r\n    You get "
-	    + container.escapeExpression(((helper = (helper = helpers.score || (depth0 != null ? depth0.score : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"score","hash":{},"data":data}) : helper)))
-	    + " points!\r\n</p>\r\n";
-	},"3":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return "<h3>Uh oh. That wasn't it.</h3>\r\n<p>\r\n    But you still get "
-	    + container.escapeExpression(((helper = (helper = helpers.score || (depth0 != null ? depth0.score : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"score","hash":{},"data":data}) : helper)))
-	    + " points!\r\n</p>\r\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.success : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "");
+	  return "<h3>You got the answer correct!</h3>\r\n<p>\r\n    You get "
+	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.data : depth0)) != null ? stack1.score : stack1), depth0))
+	    + " points!\r\n</p>\r\n";
+	},"3":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "<h3>Uh oh. That wasn't it.</h3>\r\n<p>\r\n    But you still get "
+	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.data : depth0)) != null ? stack1.score : stack1), depth0))
+	    + " points!\r\n</p>\r\n";
+	},"5":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=container.lambda, alias2=depth0 != null ? depth0 : {};
+	
+	  return "    <li>\r\n        <span class=\"success-message-answer-body\">\r\n            "
+	    + ((stack1 = alias1((depth0 != null ? depth0.body : depth0), depth0)) != null ? stack1 : "")
+	    + "\r\n        </span>\r\n"
+	    + ((stack1 = helpers["if"].call(alias2,(depth0 != null ? depth0.isUserGuess : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias2,(depth0 != null ? depth0.isAccepted : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "        <span class=\"success-message-answer-guesses success-message-answer-badge\">\r\n            User Guesses: "
+	    + container.escapeExpression(alias1((depth0 != null ? depth0.guesses : depth0), depth0))
+	    + "\r\n        </span>\r\n    </li>\r\n";
+	},"6":function(container,depth0,helpers,partials,data) {
+	    return "        <span class=\"success-message-is-user-guess success-message-answer-badge\">\r\n            Your Guess\r\n        </span>\r\n";
+	},"8":function(container,depth0,helpers,partials,data) {
+	    return "        <span class=\"success-message-is-answer-guess success-message-answer-badge\">\r\n            Accepted Answer\r\n        </span>\r\n";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=depth0 != null ? depth0 : {};
+	
+	  return ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.data : depth0)) != null ? stack1.success : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+	    + "\r\n<h3>Answers</h3>\r\n<ol>\r\n"
+	    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.question : depth0)) != null ? stack1.answers : stack1),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "</ol>\r\n";
+	},"useData":true});
+
+/***/ }),
+
+/***/ 326:
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	// Imports
+	var $ = __webpack_require__(1);
+	var simpleevent = __webpack_require__(3);
+	var scoreBoxTemplate = __webpack_require__(327);
+	
+	function ScoreBox(opts) {
+	    // Store options
+	    this.baseUrl = opts.baseUrl;
+	    this.originalScore = opts.originalScore;
+	    this.$container = opts.$container;
+	
+	    // Properties
+	    this.data = 0;
+	
+	    // Events
+	    this.onScoreAdded = new simpleevent(this);
+	
+	    function changeScore(obj, newScore) {
+	        var html = scoreBoxTemplate({ score: newScore });
+	
+	        // Re-reveal
+	        obj.$container.hide();
+	        obj.$container.html(html);
+	        obj.$container.fadeIn(500);
+	    }
+	
+	    this.onScoreAdded.subscribe(function (obj, data) {
+	        obj.data += data;
+	        changeScore(obj, obj.data);
+	    });
+	
+	    // Load original view
+	    this.data = this.originalScore;
+	    changeScore(this, this.originalScore);
+	}
+	
+	module.exports = ScoreBox;
+
+/***/ }),
+
+/***/ 327:
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(6);
+	function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return "<span class=\"score-box-msg\">Score: </span>\r\n<span class=\"score-box-score\">"
+	    + container.escapeExpression(((helper = (helper = helpers.score || (depth0 != null ? depth0.score : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"score","hash":{},"data":data}) : helper)))
+	    + "</span>";
 	},"useData":true});
 
 /***/ })
-/******/ ]);
+
+/******/ });
 //# sourceMappingURL=app.bundle.js.map

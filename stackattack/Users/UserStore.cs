@@ -50,7 +50,7 @@ namespace stackattack.Users
                 User user = table.Get(con, userID);
                 if (user != null)
                 {
-                    user.HighScore += score;
+                    user.TotalScore += score;
                     table.Save(con, user);
                 }
             }

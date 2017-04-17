@@ -1,4 +1,5 @@
 ﻿const $ = require('jquery');
+const ScoreBox = require('./score-box/score-box');
 const QuestionList = require('./question-list/question-list');
 const Question = require('./question-wrapper/question');
 
@@ -9,10 +10,21 @@ $(document).ready(function () {
 
     var $app = $('.app');
 
+    var scoreBox = new ScoreBox({
+        baseUrl: config.baseUrl,
+        originalScore: config.originalScore,
+        $container: $app.find('.score-box')
+    });
+
     var question = new Question({
         baseUrl: config.baseUrl,
         userId: config.userId,
         $container: $app.find('.question-wrapper')
+    });
+
+    // Hook up score box
+    question.onScoreChanged.subscribe(function (obj, data) {
+        scoreBox.onScoreAdded.notify(data);
     });
 
     var recentQuestions = new QuestionList({
@@ -23,9 +35,9 @@ $(document).ready(function () {
         amountToFetch: 10,
         amountToShow: 10,
         $container: $app.find('.recent-questions')
-    })
-        .refresh()
-        .onQuestionClick.subscribe(function (obj, id) {
+    }).refresh();
+    
+    recentQuestions.onQuestionClick.subscribe(function (obj, id) {
             question.refresh(id);
         });
 
@@ -37,10 +49,15 @@ $(document).ready(function () {
         amountToFetch: 10,
         amountToShow: 10,
         $container: $app.find('.random-questions')
-    })
-        .refresh()
-        .onQuestionClick.subscribe(function (obj, id) {
+    }).refresh();
+
+    randomQuestions.onQuestionClick.subscribe(function (obj, id) {
             question.refresh(id);
         });
+
+    question.onAnswerReceived.subscribe(function () {
+        recentQuestions.refresh();
+        randomQuestions.refresh();
+    });
 
 });

@@ -40,7 +40,7 @@ namespace stackattack.Core
 
         private void SetUserCookie(long id)
         {
-            this.Request.Cookies.Set(CreateUserCookie(id));
+            this.Response.Cookies.Set(CreateUserCookie(id));
         }
 
         protected virtual IUser GetCurrentUser()

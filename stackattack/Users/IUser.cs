@@ -9,5 +9,6 @@ namespace stackattack.Users
     public interface IUser
     {
         long ID { get; }
+        int TotalScore { get; }
     }
 }

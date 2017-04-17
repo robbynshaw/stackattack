@@ -1,11 +1,35 @@
-﻿{{#if success}}
+﻿{{#if data.success}}
 <h3>You got the answer correct!</h3>
 <p>
-    You get {{score}} points!
+    You get {{data.score}} points!
 </p>
 {{else}}
 <h3>Uh oh. That wasn't it.</h3>
 <p>
-    But you still get {{score}} points!
+    But you still get {{data.score}} points!
 </p>
 {{/if}}
+
+<h3>Answers</h3>
+<ol>
+{{#each question.answers}}
+    <li>
+        <span class="success-message-answer-body">
+            {{{this.body}}}
+        </span>
+        {{#if this.isUserGuess}}
+        <span class="success-message-is-user-guess success-message-answer-badge">
+            Your Guess
+        </span>
+        {{/if}}
+        {{#if this.isAccepted}}
+        <span class="success-message-is-answer-guess success-message-answer-badge">
+            Accepted Answer
+        </span>
+        {{/if}}
+        <span class="success-message-answer-guesses success-message-answer-badge">
+            User Guesses: {{this.guesses}}
+        </span>
+    </li>
+{{/each}}
+</ol>

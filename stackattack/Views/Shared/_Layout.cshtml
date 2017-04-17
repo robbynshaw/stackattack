@@ -17,16 +17,11 @@
             baseUrl: '/',
             greeting: 'Hello, world',
             userId: @Model.ID,
+            originalScore: @Model.TotalScore
         };
     </script>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top header">
-        <h1>stack<strong>attack</strong></h1>
-    </div>
-
-    <div class="container content">
-        @RenderBody()
-    </div>
+    @RenderBody()
 </body>
 </html>

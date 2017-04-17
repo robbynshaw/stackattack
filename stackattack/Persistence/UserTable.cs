@@ -17,7 +17,7 @@ namespace stackattack.Persistence
 
         private void AddCommandParams(SQLiteCommand com, User item)
         {
-            com.Parameters.AddWithValue("@HighScore", item.HighScore);
+            com.Parameters.AddWithValue("@TotalScore", item.TotalScore);
         }
 
         protected override string GetCreateSql()
@@ -25,7 +25,7 @@ namespace stackattack.Persistence
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"create table {this.TableName} (");
             sb.AppendLine("ID integer not null primary key,");
-            sb.AppendLine("HighScore integer,");
+            sb.AppendLine("TotalScore integer,");
             sb.Length = sb.Length - 3;
             sb.AppendLine(")");
             return sb.ToString();
@@ -37,10 +37,10 @@ namespace stackattack.Persistence
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"insert into {this.TableName} (");
-            sb.AppendLine("HighScore,");
+            sb.AppendLine("TotalScore,");
             sb.Length = sb.Length - 3;
             sb.AppendLine(") values (");
-            sb.AppendLine("@HighScore,");
+            sb.AppendLine("@TotalScore,");
             sb.Length = sb.Length - 3;
             sb.AppendLine(")");
             return sb.ToString();
@@ -52,7 +52,7 @@ namespace stackattack.Persistence
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"update {this.TableName} set");
-            sb.AppendLine("HighScore = @HighScore");
+            sb.AppendLine("TotalScore = @TotalScore");
             sb.AppendLine($"where ID = {item.ID}");
             return sb.ToString();
         }

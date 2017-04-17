@@ -19,13 +19,28 @@ function Question(opts) {
     this.onRefreshed = new simpleevent(this);
     this.onAnswerClick = new simpleevent(this);
     this.onAnswerReceived = new simpleevent(this);
+    this.onScoreChanged = new simpleevent(this);
+
+    function markUpAnswers(id, answers) {
+        for (var i = 0; i < answers.length; i++) {
+            var answer = answers[i];
+            if (answer.id === id) {
+                answer.isUserGuess = true;
+            }
+            answer.snippet = answer.body.substring(0, 30);
+        }
+    }
 
     this.onAnswerReceived.subscribe(function (obj, args) {
+        obj.onScoreChanged.notify(args.data.score);
+
+        markUpAnswers(args.id, args.question.answers);
         var wrapperHtml = questionWrapperTemplate();
         console.log(args);
         var msg = successMessageTemplate(args);
         obj.$container.hide();
         obj.$container.html(wrapperHtml);
+        window.scrollTo(0, 0);
         obj.$container.find('.question-detail').html(msg);
 
         obj.$container.fadeIn(500);
@@ -33,10 +48,10 @@ function Question(opts) {
 
     this.onAnswerClick.subscribe(function (obj, args) {
         console.log(args);
-        checkScore(obj, args.answer.id);
+        checkScore(obj, args.answer.id, args.question);
     });
 
-    function checkScore($this, id) {
+    function checkScore($this, id, question) {
         $.ajax({
             method: 'GET',
             url: $this.baseUrl + 'api/User/CheckScore',
@@ -45,7 +60,11 @@ function Question(opts) {
                 answerID: id
             }
         }).done(function (data) {
-            $this.onAnswerReceived.notify(data);
+            $this.onAnswerReceived.notify({
+                data: data,
+                id: id,
+                question: question
+            });
         });
     }
 
@@ -58,10 +77,12 @@ function Question(opts) {
                 
                 // Add event
                 answer.onClick = new simpleevent(answer);
-                answer.onClick.subscribe(function (o, e) {
+                answer.onClick.subscribe(function (o, data) {
+                    console.log('answer clicked');
+                    console.log(o);
                     obj.onAnswerClick.notify({
-                        answer: o,
-                        element: e
+                        question: args,
+                        answer: data
                     });
                 })
 
@@ -70,8 +91,9 @@ function Question(opts) {
                 var $el = $(document.createElement('div'));
 
                 $container.append($el);
+                $el.data('answer', answer);
                 $el.on('click', function () {
-                    answer.onClick.notify($el);
+                    answer.onClick.notify($(this).data('answer'));
                 })
 
                 // Make it all slide down fancy

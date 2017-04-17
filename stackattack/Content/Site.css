@@ -16,12 +16,35 @@ h1, h2, h3, h4, h5 {
     font-size: 2em;
     padding: 10px;
     margin: 0px;
+    width: 200px;
 }
 
 .content {
     clear: both;
     margin-top: 51px;
     padding: 30px;
+}
+
+.score-box {
+    /* bootstrap nav-bar is 1030 */
+    z-index: 1031;
+    margin: -40px 10px 10px 10px;
+    float: right;
+    clear: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 1.2em;
+    padding: 5px 10px;
+    border: 1px solid #FFF;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px; /* future proofing */
+    -khtml-border-radius: 3px; /* for old Konqueror browsers */
+    color: #FFF;
+}
+
+.score-box-score {
+    font-weight: 500;
 }
 
 .question-detail-item {
@@ -93,4 +116,42 @@ h1, h2, h3, h4, h5 {
     float: right;
     width: 18px;
     text-align: center;
+}
+
+.success-message-answer-body {
+    display: block;
+    clear: both;
+    max-height: 50px;
+    overflow: hidden;
+    background-color: #f6fcfd;
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+.success-message-answer-badge {
+    display: inline-block;
+    float: right;
+    padding: 2px 5px;
+    margin: 10px 5px;
+    border-width: 1px;
+    border-style: solid;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px; /* future proofing */
+    -khtml-border-radius: 3px; /* for old Konqueror browsers */
+}
+
+.success-message-answer-guesses {
+    border-color: #8caa9e;
+    color: #8caa9e;
+}
+
+.success-message-is-user-guess {
+    border-color: #964d4d;
+    color: #964d4d;
+}
+
+.success-message-is-answer-guess {
+    border-color: #d2ab31;
+    color: #d2ab31;
 }
